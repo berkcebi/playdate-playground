@@ -7,5 +7,9 @@
     },
     "Lua.diagnostics.globals": [
         "playdate"
+    ],
+    "Lua.diagnostics.disable": [
+        // Support classes.
+        "undefined-global"
     ]
 }
