@@ -1,19 +1,30 @@
 import "CoreLibs/object"
 import "CoreLibs/graphics"
 import "CoreLibs/sprites"
+import "adventurer"
 import "bar"
 
 local graphics <const> = playdate.graphics
 local margin <const> = 8
 
-local bar = nil
+local adventurer = nil
+local healthBar = nil
+
+local function reloadHealthBar()
+    local fraction = adventurer.health / adventurer.maxHealth
+    local title = math.ceil(adventurer.health) .. " / 100"
+    healthBar:set(fraction, title)
+end
 
 local function initialize()
-    local bar_width, bar_height = Bar.size()
+    adventurer = Adventurer()
 
-    bar = Bar()
-    bar:moveTo(margin + bar_width / 2, margin + bar_height / 2)
-    bar:add()
+    healthBar = Bar()
+    local barWidth, barHeight = Bar.size()
+    healthBar:moveTo(margin + barWidth / 2, margin + barHeight / 2)
+    healthBar:add()
+
+    reloadHealthBar()
 end
 
 initialize()
@@ -21,8 +32,10 @@ initialize()
 function playdate.update()
     if playdate.buttonJustPressed(playdate.kButtonA) then
         math.randomseed(playdate.getSecondsSinceEpoch())
-        local fraction = math.random()
-        bar:setFraction(fraction)
+        local health = math.random() * 100
+        adventurer:setHealth(health)
+
+        reloadHealthBar()
     end
 
     graphics.sprite.update()
